@@ -1,0 +1,39 @@
+{
+  "name": "sourcebin-wrapper",
+  "version": "1.0.0",
+  "description": "Create and get bins from https://sourceb.in/",
+  "main": "index.js",
+  "scripts": {
+    "test-get": "ts-node src/__tests__/GetBin.test.ts",
+    "test-create": "ts-node src/__tests__/CreateBin.test.ts",
+    "build": "tsc"
+  },
+  "keywords": [
+    "sourcebin",
+    "sourcebin npm",
+    "sourcebin-wrapper",
+    "sourcebin-wrapper npm"
+  ],
+  "author": "Jacxk",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^3.8.3",
+    "ts-node": "^8.6.2",
+    "@types/node-fetch": "^2.5.5"
+  },
+  "dependencies": {
+    "@sourcebin/linguist": "0.0.2",
+    "node-fetch": "^2.6.0"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jacxk/Sourcebin-Wrapper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Jacxk/Sourcebin-Wrapper/issues"
+  },
+  "homepage": "https://github.com/Jacxk/Sourcebin-Wrapper#readme"
+}
