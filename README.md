@@ -11,7 +11,7 @@ With this wrapper you can create and get bins from https://sourceb.in/
 import * as SourceBin from 'sourcebin-wrapper';
 
 // Node/JavaScript
-const SourceBin = require('SourceBin');
+const SourceBin = require('sourcebin-wrapper');
 ```
 
 ### Create
