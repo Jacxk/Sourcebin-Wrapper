@@ -3,7 +3,8 @@ import fetch from "node-fetch";
 const { version } = require("../package.json");
 const linguist = require("@sourcebin/linguist/dist/linguist.json");
 
-const url = "https://sourceb.in";
+const url_long = "https://sourceb.in";
+const url_short = "sourceb.in";
 
 export class Bin {
     public key: string;
@@ -13,7 +14,7 @@ export class Bin {
 
     constructor(options: BinOptions) {
         this.key = options.key;
-        this.url = `${ url }/${ this.key }`;
+        this.url = `${ url_long }/${ this.key }`;
         this.created = options.created;
         this.files = options.files;
     }
@@ -54,7 +55,22 @@ interface Language {
 }
 
 export async function get(k: string): Promise<Bin> {
-    const { files, key, created } = await fetch(`${ url }/api/bins/${ k }`, {
+
+    if (/(https?)(:\/\/)?(.+)\.(.*)\/?/.test(k)) {
+        if (k.includes(url_short)) {
+            const match = k.match(/sourceb.in\/(.+)/);
+
+            if (!match) {
+                return Promise.reject("Url must have a valid path!");
+            }
+
+            k = match[1].replace(/\//g, "");
+        } else {
+            return Promise.reject(`Url must be a valid '${ url_short }' url!`);
+        }
+    }
+
+    const { files, key, created } = await fetch(`${ url_long }/api/bins/${ k }`, {
         headers: {
             "Content-Type": "application/json",
             "User-Agent": "SourceBin Wrapper/" + version
@@ -89,7 +105,7 @@ export async function create(binFiles: Array<BinFile>): Promise<Bin | string> {
         })
     };
 
-    const { key, message } = await fetch(`${ url }/api/bins`, {
+    const { key, message } = await fetch(`${ url_long }/api/bins`, {
         method: "post",
         headers: {
             "Content-Type": "application/json",
