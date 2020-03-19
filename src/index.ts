@@ -1,10 +1,10 @@
-import fetch from "node-fetch";
+import fetch from 'node-fetch';
 
-const { version } = require("../package.json");
-const linguist = require("@sourcebin/linguist/dist/linguist.json");
+const { version } = require('../package.json');
+const linguist = require('@sourcebin/linguist/dist/linguist.json');
 
-const url_long = "https://sourceb.in";
-const url_short = "sourceb.in";
+const url_long = 'https://sourceb.in';
+const url_short = 'sourceb.in';
 
 export class Bin {
     public key: string;
@@ -32,7 +32,7 @@ export class BinFile {
     }
 
     public object(): any {
-        return Object.assign({}, this)
+        return Object.assign({}, this);
     }
 }
 
@@ -61,10 +61,10 @@ export async function get(k: string): Promise<Bin> {
             const match = k.match(/sourceb.in\/(.+)/);
 
             if (!match) {
-                return Promise.reject("Url must have a valid path!");
+                return Promise.reject('Url must have a valid path!');
             }
 
-            k = match[1].replace(/\//g, "");
+            k = match[1].replace(/\//g, '');
         } else {
             return Promise.reject(`Url must be a valid '${ url_short }' url!`);
         }
@@ -72,10 +72,10 @@ export async function get(k: string): Promise<Bin> {
 
     const { files, key, created } = await fetch(`${ url_long }/api/bins/${ k }`, {
         headers: {
-            "Content-Type": "application/json",
-            "User-Agent": "SourceBin Wrapper/" + version
+            'Content-Type': 'application/json',
+            'User-Agent': 'SourceBin Wrapper/' + version
         },
-        method: "get"
+        method: 'get'
     }).then(res => res.json());
 
     const binFiles: Array<BinFile> = [];
@@ -84,7 +84,7 @@ export async function get(k: string): Promise<Bin> {
         binFiles.push(new BinFile({
             content: file.content,
             languageId: file.languageId
-        }))
+        }));
     });
 
     return new Bin({
@@ -96,20 +96,20 @@ export async function get(k: string): Promise<Bin> {
 
 export async function create(binFiles: Array<BinFile>): Promise<Bin | string> {
     if (!binFiles || binFiles.length < 1) {
-        throw "Cannot create from empty bin array";
+        throw 'Cannot create from empty bin array';
     }
 
     const body = {
         files: binFiles.map(file => file.object()).map(file => {
-            return { content: file.content, languageId: file.languageId }
+            return { content: file.content, languageId: file.languageId };
         })
     };
 
     const { key, message } = await fetch(`${ url_long }/api/bins`, {
-        method: "post",
+        method: 'post',
         headers: {
-            "Content-Type": "application/json",
-            "User-Agent": "SourceBin Wrapper/" + version
+            'Content-Type': 'application/json',
+            'User-Agent': 'SourceBin Wrapper/' + version
         },
         body: JSON.stringify(body)
     }).then(res => res.json());
@@ -128,7 +128,7 @@ export async function create(binFiles: Array<BinFile>): Promise<Bin | string> {
 export function getLanguageId(lang: string | number): number {
     if (!lang) return null;
 
-    if (typeof lang === "number") return lang;
+    if (typeof lang === 'number') return lang;
 
     lang = lang.toLowerCase();
 

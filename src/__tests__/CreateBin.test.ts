@@ -1,9 +1,9 @@
-import * as SourceBin from "../index";
+import * as SourceBin from '../index';
 
 SourceBin.create([
     new SourceBin.BinFile({
-        content: "This was created using the wrapper\n\nlanguageId: \"js\"",
-        languageId: "js"
+        content: 'This was created using the wrapper\n\nlanguageId: "js"',
+        languageId: 'js'
     })
 ])
     .then(console.log)

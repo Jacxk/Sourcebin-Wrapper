@@ -6,7 +6,9 @@
   "scripts": {
     "test-get": "ts-node src/__tests__/GetBin.test.ts",
     "test-create": "ts-node src/__tests__/CreateBin.test.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "fix": "npx eslint src/**/* --fix",
+    "test": "npx eslint src/**/*"
   },
   "keywords": [
     "sourcebin",
@@ -17,9 +19,12 @@
   "author": "Jacxk",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^3.8.3",
+    "@types/node-fetch": "^2.5.5",
+    "@typescript-eslint/eslint-plugin": "^2.24.0",
+    "@typescript-eslint/parser": "^2.24.0",
+    "eslint": "^6.8.0",
     "ts-node": "^8.6.2",
-    "@types/node-fetch": "^2.5.5"
+    "typescript": "^3.8.3"
   },
   "dependencies": {
     "@sourcebin/linguist": "0.0.2",
