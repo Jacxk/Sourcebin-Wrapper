@@ -8,7 +8,8 @@
     "test-create": "ts-node src/__tests__/CreateBin.test.ts",
     "build": "tsc",
     "fix": "npx eslint src/**/* --fix",
-    "test": "npx eslint src/**/*"
+    "test": "npx eslint src/**/*",
+      "install-hooks": "bash ./scripts/install-hooks.sh"
   },
   "keywords": [
     "sourcebin",
