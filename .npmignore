@@ -1,7 +1,1 @@
-.idea/
-node_modules/
-src/
-
-sourcebin-wrapper.iml
-package-lock.json
-tsconfig.json
+.idea/node_modules/src/sourcebin-wrapper.imlpackage-lock.jsontsconfig.json.editorconfig.eslintrc.json
