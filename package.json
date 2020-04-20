@@ -1,8 +1,8 @@
 {
   "name": "sourcebin-wrapper",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Create and get bins from https://sourceb.in/",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test-get": "ts-node src/__tests__/GetBin.test.ts",
     "test-create": "ts-node src/__tests__/CreateBin.test.ts",
