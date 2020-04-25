@@ -3,8 +3,11 @@ import fetch from 'node-fetch';
 const { version } = require('../package.json');
 const linguist = require('@sourcebin/linguist/dist/linguist.json');
 
-const url_long = 'https://sourceb.in';
-const url_short = 'sourceb.in';
+const [
+    url_long, ...urls 
+] = [
+    'https://sourceb.in', 'sourceb.in', 'srcb.in' 
+];
 
 export class Bin {
     public key: string;
@@ -55,18 +58,20 @@ interface Language {
 }
 
 export async function get(k: string): Promise<Bin> {
+    if (/((https?)(:\/\/))?(.+)\.(.*)\/?/.test(k)) {
+        if (urls.filter(url => k.includes(url))) {
 
-    if (/(https?)(:\/\/)?(.+)\.(.*)\/?/.test(k)) {
-        if (k.includes(url_short)) {
-            const match = k.match(/sourceb.in\/(.+)/);
+            const [
+                match, , , , key 
+            ] = k.match(/s((ource)|(rc))b\.in\/(\S+)/) || [];
 
             if (!match) {
                 return Promise.reject('Url must have a valid path!');
             }
 
-            k = match[1].replace(/\//g, '');
+            k = key.replace(/\//g, '');
         } else {
-            return Promise.reject(`Url must be a valid '${ url_short }' url!`);
+            return Promise.reject(`Url must be a valid '${ urls.join(' or ') }' url!`);
         }
     }
 
@@ -76,7 +81,8 @@ export async function get(k: string): Promise<Bin> {
             'User-Agent': 'SourceBin Wrapper/' + version
         },
         method: 'get'
-    }).then(res => res.json());
+    }).then(checkStatus)
+        .then(res => res.json());
 
     const binFiles: Array<BinFile> = [];
 
@@ -100,9 +106,11 @@ export async function create(binFiles: Array<BinFile>): Promise<Bin | string> {
     }
 
     const body = {
-        files: binFiles.map(file => file.object()).map(file => {
-            return { content: file.content, languageId: file.languageId };
-        })
+        files: binFiles
+            .map(file => file.object())
+            .map(file => {
+                return { content: file.content, languageId: file.languageId };
+            })
     };
 
     const { key, message } = await fetch(`${ url_long }/api/bins`, {
@@ -112,7 +120,8 @@ export async function create(binFiles: Array<BinFile>): Promise<Bin | string> {
             'User-Agent': 'SourceBin Wrapper/' + version
         },
         body: JSON.stringify(body)
-    }).then(res => res.json());
+    }).then(checkStatus)
+        .then(res => res.json());
 
     if (message) {
         return message;
@@ -143,4 +152,12 @@ export function getLanguageId(lang: string | number): number {
     if (name) return Number(name);
 
     return null;
+}
+
+function checkStatus(res) {
+    if (res.ok) {
+        return res;
+    } else {
+        throw Error(res.statusText);
+    }
 }
