@@ -26,7 +26,8 @@ SourceBin.create([
     new SourceBin.BinFile({
         content: 'This was created using the wrapper\n\nlanguageId: "js"',
         languageId: 'js'
-    })
+    }),
+    ...
 ]).then(console.log)
   .catch(console.error);
 ```
@@ -47,9 +48,12 @@ Output for both **create** and **get**
 {
   "key": "d4ad855543",
   "url": "https://sourceb.in/d4ad855543",
+  "shortened": "https://srcb.in/d4ad855543",
   "created": "2020-03-17T21:12:30.549Z",
   "files": [
     {
+      "raw": "https://sourceb.in/d4ad855543/0",
+      "content": "This was created using the wrapper\n\nlanguageId: \"js\"",
       "languageId": 183,
       "language": {
         "name": "JavaScript",
@@ -59,8 +63,7 @@ Output for both **create** and **get**
           "node"
         ],
         "aceMode": "javascript"
-      },
-      "content": "This was created using the wrapper\n\nlanguageId: \"js\""
+      }
     }
   ]
 }

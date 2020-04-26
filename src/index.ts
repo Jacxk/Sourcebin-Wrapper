@@ -31,14 +31,16 @@ export class Bin {
 }
 
 export class BinFile {
-    public languageId: number;
-    public language: Language;
+    public raw: string;
     public content: string;
+    public language: Language;
+    public languageId: number;
 
     constructor(options: BinFileOptions) {
+        this.raw = `${ url_long }/${ options.raw }`;
+        this.content = options.content;
         this.languageId = getLanguageId(options.languageId) || 372;
         this.language = linguist[this.languageId];
-        this.content = options.content;
     }
 
     public object(): any {
@@ -53,15 +55,16 @@ interface BinOptions {
 }
 
 interface BinFileOptions {
+    raw?: string;
     content: string;
     languageId?: number | string;
 }
 
 interface Language {
     name: string;
-    extension: string;
-    aliases?: Array<string>;
     aceMode: string;
+    aliases?: Array<string>;
+    extension: string;
 }
 
 export async function get(k: string): Promise<Bin> {
@@ -69,7 +72,7 @@ export async function get(k: string): Promise<Bin> {
         if (urls.filter(url => k.includes(url))) {
 
             const [
-                match, , , , key 
+                match, , , , key
             ] = k.match(/s((ource)|(rc))b\.in\/(\S+)/) || [];
 
             if (!match) {
@@ -82,7 +85,7 @@ export async function get(k: string): Promise<Bin> {
         }
     }
 
-    const { files, key, created } = await fetch(`${ url_long }/api/bins/${ k }`, {
+    const { files, key, created }: Bin = await fetch(`${ url_long }/api/bins/${ k }`, {
         headers: {
             'Content-Type': 'application/json',
             'User-Agent': 'SourceBin Wrapper/' + version
@@ -94,10 +97,11 @@ export async function get(k: string): Promise<Bin> {
 
     const binFiles: Array<BinFile> = [];
 
-    files.forEach(file => {
+    files.forEach((file, index) => {
         binFiles.push(new BinFile({
             content: file.content,
-            languageId: file.languageId
+            languageId: file.languageId,
+            raw: `${ key }/${ index }`
         }));
     });
 
@@ -117,7 +121,10 @@ export async function create(binFiles: Array<BinFile>): Promise<Bin | string> {
         files: binFiles
             .map(file => file.object())
             .map(file => {
-                return { content: file.content, languageId: file.languageId };
+                return {
+                    content: file.content,
+                    languageId: file.languageId
+                };
             })
     };
 
@@ -128,7 +135,8 @@ export async function create(binFiles: Array<BinFile>): Promise<Bin | string> {
             'User-Agent': 'SourceBin Wrapper/' + version
         },
         body: JSON.stringify(body)
-    }).then(checkStatus)
+    })
+        .then(checkStatus)
         .then(res => res.json());
 
     if (message) {
@@ -138,7 +146,12 @@ export async function create(binFiles: Array<BinFile>): Promise<Bin | string> {
     return new Bin({
         key: key,
         created: new Date(),
-        files: binFiles
+        files: binFiles.map((file, i) => {
+            return {
+                ...file.object(),
+                raw: `${ url_long }/${ key }/${ i }`
+            };
+        })
     });
 }
 
