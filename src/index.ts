@@ -4,9 +4,14 @@ const { version } = require('../package.json');
 const linguist = require('@sourcebin/linguist/dist/linguist.json');
 
 const [
-    url_long, ...urls 
+    url_long,
+    url_short,
+    ...urls
 ] = [
-    'https://sourceb.in', 'sourceb.in', 'srcb.in' 
+    'https://sourceb.in',
+    'https://srcb.in',
+    'sourceb.in',
+    'srcb.in'
 ];
 
 export class Bin {
@@ -14,10 +19,12 @@ export class Bin {
     public files: Array<BinFile>;
     public created: Date;
     public url: string;
+    public shortened: string;
 
     constructor(options: BinOptions) {
         this.key = options.key;
         this.url = `${ url_long }/${ this.key }`;
+        this.shortened = `${ url_short }/${ this.key }`;
         this.created = options.created;
         this.files = options.files;
     }
@@ -25,7 +32,7 @@ export class Bin {
 
 export class BinFile {
     public languageId: number;
-    public language?: Language;
+    public language: Language;
     public content: string;
 
     constructor(options: BinFileOptions) {
@@ -81,7 +88,8 @@ export async function get(k: string): Promise<Bin> {
             'User-Agent': 'SourceBin Wrapper/' + version
         },
         method: 'get'
-    }).then(checkStatus)
+    })
+        .then(checkStatus)
         .then(res => res.json());
 
     const binFiles: Array<BinFile> = [];
