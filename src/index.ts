@@ -5,10 +5,12 @@ const linguist = require('@sourcebin/linguist/dist/linguist.json');
 
 const [
     url_long,
+    url_raw,
     url_short,
     ...urls
 ] = [
     'https://sourceb.in',
+    'https://sourceb.in/raw',
     'https://srcb.in',
     'sourceb.in',
     'srcb.in'
@@ -37,7 +39,7 @@ export class BinFile {
     public languageId: number;
 
     constructor(options: BinFileOptions) {
-        this.raw = `${ url_long }/${ options.raw }`;
+        this.raw = `${ url_raw }/${ options.raw }`;
         this.content = options.content;
         this.languageId = getLanguageId(options.languageId) || 372;
         this.language = linguist[this.languageId];
@@ -149,7 +151,7 @@ export async function create(binFiles: Array<BinFile>): Promise<Bin | string> {
         files: binFiles.map((file, i) => {
             return {
                 ...file.object(),
-                raw: `${ url_long }/${ key }/${ i }`
+                raw: `${ url_raw }/${ key }/${ i }`
             };
         })
     });
