@@ -1,6 +1,6 @@
 {
   "name": "sourcebin-wrapper",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "description": "Create and get bins from https://sourceb.in/",
   "main": "lib/index.js",
   "scripts": {
